@@ -10,38 +10,38 @@
 
 void run_sort_tests(void) {
     if(!test_sort3()) {
-        std::cout << "test_sort3:            failed" << std::endl;
+        std::cout << "test_sort3:                  failed" << std::endl;
     }
     else {
-        std::cout << "test_sort3:            ok" << std::endl;
+        std::cout << "test_sort3:                  ok" << std::endl;
     }
 
     if(!test_sort5()) {
-        std::cout << "test_sort5:            failed" << std::endl;
+        std::cout << "test_sort5:                  failed" << std::endl;
     }
     else {
-        std::cout << "test_sort5:            ok" << std::endl;
+        std::cout << "test_sort5:                  ok" << std::endl;
     }
 
     if(!test_sort7()) {
-        std::cout << "test_sort7:            failed" << std::endl;
+        std::cout << "test_sort7:                  failed" << std::endl;
     }
     else {
-        std::cout << "test_sort7:            ok" << std::endl;
+        std::cout << "test_sort7:                  ok" << std::endl;
     }
 
     if(!test_sort9()) {
-        std::cout << "test_sort9:            failed" << std::endl;
+        std::cout << "test_sort9:                  failed" << std::endl;
     }
     else {
-        std::cout << "test_sort9:            ok" << std::endl;
+        std::cout << "test_sort9:                  ok" << std::endl;
     }
 
     if(!test_insertion_sort()) {
-        std::cout << "test_insertion_sort:   failed" << std::endl;
+        std::cout << "test_insertion_sort:         failed" << std::endl;
     }
     else {
-        std::cout << "test_insertion_sort:   ok" << std::endl;
+        std::cout << "test_insertion_sort:         ok" << std::endl;
     }
 
 

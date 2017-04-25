@@ -10,31 +10,31 @@
 
 void run_merge_tests(void) {
     if(!test_merge2_arrays()) {
-        std::cout << "test_merge2_arrays:    failed" << std::endl;
+        std::cout << "test_merge2_arrays:          failed" << std::endl;
     }
     else {
-        std::cout << "test_merge2_arrays:    ok" << std::endl;
+        std::cout << "test_merge2_arrays:          ok" << std::endl;
     }
 
     if(!test_merge3_arrays()) {
-        std::cout << "test_merge3_arrays:    failed" << std::endl;
+        std::cout << "test_merge3_arrays:          failed" << std::endl;
     }
     else {
-        std::cout << "test_merge3_arrays:    ok" << std::endl;
+        std::cout << "test_merge3_arrays:          ok" << std::endl;
     }
 
     if(!test_merge5_arrays()) {
-        std::cout << "test_merge5_arrays:    failed" << std::endl;
+        std::cout << "test_merge5_arrays:          failed" << std::endl;
     }
     else {
-        std::cout << "test_merge5_arrays:    ok" << std::endl;
+        std::cout << "test_merge5_arrays:          ok" << std::endl;
     }
 
     if(!test_merge7_arrays()) {
-        std::cout << "test_merge5_arrays:    failed" << std::endl;
+        std::cout << "test_merge5_arrays:          failed" << std::endl;
     }
     else {
-        std::cout << "test_merge5_arrays:    ok" << std::endl;
+        std::cout << "test_merge5_arrays:          ok" << std::endl;
     }
 
     return;

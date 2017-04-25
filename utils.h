@@ -9,6 +9,6 @@
 
 template <class T>
 void print_matrix(const cv::Mat &mat0);
-void diff_matrices(const cv::Mat& mat0, const cv::Mat& mat1, const std::string description);
+bool diff_matrices(const cv::Mat& mat0, const cv::Mat& mat1, const std::string description="", bool print_stats=false);
 
 #endif

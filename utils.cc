@@ -13,7 +13,8 @@ void print_matrix(const cv::Mat &mat0) {
     return;
 }
 
-void diff_matrices(const cv::Mat& mat0, const cv::Mat& mat1, const std::string description) {
+bool diff_matrices(const cv::Mat& mat0, const cv::Mat& mat1, const std::string description, bool print_stats) {
+    bool rv = true;
     double mav = 255.0;
     double err = 255.0;
     double nonzeros = 255.0;
@@ -24,6 +25,10 @@ void diff_matrices(const cv::Mat& mat0, const cv::Mat& mat1, const std::string d
     err = (cv::sum(diff).val[0] / (diff.rows*diff.cols));
     nonzeros = 1. * cv::countNonZero( diff ) / (diff.rows*diff.cols);
 
+    if(err != 0.0 || nonzeros != 0.0 || mav != 0.0) {
+        rv = false;
+    }
+
     /*for(int y = 0; y < mat1.rows; y++) {
         for(int x = 1; x < mat1.cols; x++) {
             if(mat1.at<uchar>(y,x) != mat2.at<uchar>(y,x)) {
@@ -32,10 +37,12 @@ void diff_matrices(const cv::Mat& mat0, const cv::Mat& mat1, const std::string d
         }
     }*/
 
-    std::cout << "compare " << description << ":" << std::endl;
-    std::cout << "error: " << err << std::endl;
-    std::cout << "nonzeros: " << nonzeros << std::endl;
-    std::cout << "mav: " << mav << std::endl;
+    if(print_stats) {
+        std::cout << "compare " << description << ":" << std::endl;
+        std::cout << "error: " << err << std::endl;
+        std::cout << "nonzeros: " << nonzeros << std::endl;
+        std::cout << "mav: " << mav << std::endl;
+    }
 
-    return;
+    return rv;
 }

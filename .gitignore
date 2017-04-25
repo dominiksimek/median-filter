@@ -1,6 +1,7 @@
 #
 *.o
 med
+median
 
 #
 *.pdf

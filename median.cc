@@ -8,6 +8,7 @@
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/highgui/highgui.hpp>
 
+#include "median.h"
 #include "sort.h"
 #include "merge.h"
 #include "utils.h"
@@ -47,10 +48,12 @@ void filter3(cv::Mat& src, cv::Mat& dst) {
         }
     }
 
-    TTimePoint end = std::chrono::steady_clock::now();
-    std::cout << "filter3::TimeElapsed (us): " << \
-    std::chrono::duration_cast<std::chrono::microseconds>(end-begin).count()/1000 << \
-    std::endl;
+    if(print) {
+        TTimePoint end = std::chrono::steady_clock::now();
+        std::cout << "filter3::TimeElapsed (us): " << \
+        std::chrono::duration_cast<std::chrono::microseconds>(end-begin).count()/1000 << \
+        std::endl;
+    }
 
     return;
 }
@@ -123,10 +126,12 @@ void filter3_opt(cv::Mat& src, cv::Mat& dst) {
         }
     }
 
-    TTimePoint end = std::chrono::steady_clock::now();
-    std::cout << "filter3_opt::TimeElapsed (us): " << \
-    std::chrono::duration_cast<std::chrono::microseconds>(end-begin).count()/1000 << \
-    std::endl;
+    if(print) {
+        TTimePoint end = std::chrono::steady_clock::now();
+        std::cout << "filter3_opt::TimeElapsed (us): " << \
+        std::chrono::duration_cast<std::chrono::microseconds>(end-begin).count()/1000 << \
+        std::endl;
+    }
 
     return;
 }
@@ -160,10 +165,12 @@ void filter3_opt_sort_only(cv::Mat& src, cv::Mat& dst) {
         }
     }
 
-    TTimePoint end = std::chrono::steady_clock::now();
-    std::cout << "filter3_opt_sort_only::TimeElapsed (us): " << \
-    std::chrono::duration_cast<std::chrono::microseconds>(end-begin).count()/1000 << \
-    std::endl;
+    if(print) {
+        TTimePoint end = std::chrono::steady_clock::now();
+        std::cout << "filter3_opt_sort_only::TimeElapsed (us): " << \
+        std::chrono::duration_cast<std::chrono::microseconds>(end-begin).count()/1000 << \
+        std::endl;
+    }
 
     return;
 }
@@ -199,10 +206,12 @@ void filter5(cv::Mat& src, cv::Mat& dst) {
         }
     }
 
-    TTimePoint end = std::chrono::steady_clock::now();
-    std::cout << "filter5::TimeElapsed (us): " << \
-    std::chrono::duration_cast<std::chrono::microseconds>(end-begin).count()/1000 << \
-    std::endl;
+    if(print) {
+        TTimePoint end = std::chrono::steady_clock::now();
+        std::cout << "filter5::TimeElapsed (us): " << \
+        std::chrono::duration_cast<std::chrono::microseconds>(end-begin).count()/1000 << \
+        std::endl;
+    }
 
     return;
 }
@@ -263,10 +272,12 @@ void filter5_opt(cv::Mat& src, cv::Mat& dst) {
         }
     }
 
-    TTimePoint end = std::chrono::steady_clock::now();
-    std::cout << "filter5_opt::TimeElapsed (us): " << \
-    std::chrono::duration_cast<std::chrono::microseconds>(end-begin).count()/1000 << \
-    std::endl;
+    if(print) {
+        TTimePoint end = std::chrono::steady_clock::now();
+        std::cout << "filter5_opt::TimeElapsed (us): " << \
+        std::chrono::duration_cast<std::chrono::microseconds>(end-begin).count()/1000 << \
+        std::endl;
+    }
 
     return;
 }
@@ -300,10 +311,12 @@ void filter7(cv::Mat& src, cv::Mat& dst) {
         }
     }
 
-    TTimePoint end = std::chrono::steady_clock::now();
-    std::cout << "filter7::TimeElapsed (us): " << \
-    std::chrono::duration_cast<std::chrono::microseconds>(end-begin).count()/1000 << \
-    std::endl;
+    if(print) {
+        TTimePoint end = std::chrono::steady_clock::now();
+        std::cout << "filter7::TimeElapsed (us): " << \
+        std::chrono::duration_cast<std::chrono::microseconds>(end-begin).count()/1000 << \
+        std::endl;
+    }
 
     return;
 }
@@ -370,10 +383,12 @@ void filter7_opt(cv::Mat& src, cv::Mat& dst) {
         }
     }
 
-    TTimePoint end = std::chrono::steady_clock::now();
-    std::cout << "filter7_opt::TimeElapsed (us): " << \
-    std::chrono::duration_cast<std::chrono::microseconds>(end-begin).count()/1000 << \
-    std::endl;
+    if(print) {
+        TTimePoint end = std::chrono::steady_clock::now();
+        std::cout << "filter7_opt::TimeElapsed (us): " << \
+        std::chrono::duration_cast<std::chrono::microseconds>(end-begin).count()/1000 << \
+        std::endl;
+    }
 
     return;
 }
@@ -386,17 +401,193 @@ void filter_cv(cv::Mat& src, cv::Mat& dst, int filterSize) {
 
     cv::medianBlur(src, dst, filterSize);
 
-    TTimePoint end = std::chrono::steady_clock::now();
-    std::cout << "filter_cv::TimeElapsed (us): " << \
-    std::chrono::duration_cast<std::chrono::microseconds>(end-begin).count()/1000 << \
-    std::endl;
+    if(print) {
+        TTimePoint end = std::chrono::steady_clock::now();
+        std::cout << "filter_cv::TimeElapsed (us): " << \
+        std::chrono::duration_cast<std::chrono::microseconds>(end-begin).count()/1000 << \
+        std::endl;
+    }
+
+    return;
 }
 
+/*****************************************************************************/
+/**
+* Tests
+*/
+void run_median_tests(void) {
+    if(!test_filter3()) {
+        std::cout << "test_filter3:                failed" << std::endl;
+    }
+    else {
+        std::cout << "test_filter3:                ok" << std::endl;
+    }
+
+    if(!test_filter3_opt()) {
+        std::cout << "test_filter3_opt:            failed" << std::endl;
+    }
+    else {
+        std::cout << "test_filter3_opt:            ok" << std::endl;
+    }
+
+    if(!test_filter3_opt_sort_only()) {
+        std::cout << "test_filter3_opt_sort_only:  failed" << std::endl;
+    }
+    else {
+        std::cout << "test_filter3_opt_sort_only:  ok" << std::endl;
+    }
+
+    if(!test_filter5()) {
+        std::cout << "test_filter5:                failed" << std::endl;
+    }
+    else {
+        std::cout << "test_filter5:                ok" << std::endl;
+    }
+
+    if(!test_filter5_opt()) {
+        std::cout << "test_filter5_opt:            failed" << std::endl;
+    }
+    else {
+        std::cout << "test_filter5_opt:            ok" << std::endl;
+    }
+
+    if(!test_filter7()) {
+        std::cout << "test_filter7:                failed" << std::endl;
+    }
+    else {
+        std::cout << "test_filter7:                ok" << std::endl;
+    }
+
+    if(!test_filter7_opt()) {
+        std::cout << "test_filter7_opt:            failed" << std::endl;
+    }
+    else {
+        std::cout << "test_filter7_opt:            ok" << std::endl;
+    }
+
+    return;
+}
+
+bool test_filter3(void) {
+    cv::Mat src0(1024, 1024, cv::DataType<uint8_t>::type);
+    cv::Mat dst0 = cv::Mat::zeros(src0.rows, src0.cols, cv::DataType<uint8_t>::type);
+    cv::Mat dst1 = cv::Mat::zeros(src0.rows, src0.cols, cv::DataType<uint8_t>::type);
+    cv::randu(src0, 0, 255);
+
+    filter3<uint8_t>(src0, dst0);
+    filter_cv(src0, dst1, 3);
+
+    if(!diff_matrices(dst0, dst1)) {
+        return false;
+    }
+
+    return true;
+}
+
+bool test_filter3_opt(void) {
+    cv::Mat src0(1024, 1024, cv::DataType<uint8_t>::type);
+    cv::Mat dst0 = cv::Mat::zeros(src0.rows, src0.cols, cv::DataType<uint8_t>::type);
+    cv::Mat dst1 = cv::Mat::zeros(src0.rows, src0.cols, cv::DataType<uint8_t>::type);
+    cv::randu(src0, 0, 255);
+
+    filter3_opt<uint8_t>(src0, dst0);
+    filter_cv(src0, dst1, 3);
+
+    if(!diff_matrices(dst0, dst1)) {
+        return false;
+    }
+
+    return true;
+}
+
+bool test_filter3_opt_sort_only(void) {
+    cv::Mat src0(1024, 1024, cv::DataType<uint8_t>::type);
+    cv::Mat dst0 = cv::Mat::zeros(src0.rows, src0.cols, cv::DataType<uint8_t>::type);
+    cv::Mat dst1 = cv::Mat::zeros(src0.rows, src0.cols, cv::DataType<uint8_t>::type);
+    cv::randu(src0, 0, 255);
+
+    filter3_opt_sort_only<uint8_t>(src0, dst0);
+    filter_cv(src0, dst1, 3);
+
+    if(!diff_matrices(dst0, dst1)) {
+        return false;
+    }
+
+    return true;
+}
+
+bool test_filter5(void) {
+    cv::Mat src0(1024, 1024, cv::DataType<uint8_t>::type);
+    cv::Mat dst0 = cv::Mat::zeros(src0.rows, src0.cols, cv::DataType<uint8_t>::type);
+    cv::Mat dst1 = cv::Mat::zeros(src0.rows, src0.cols, cv::DataType<uint8_t>::type);
+    cv::randu(src0, 0, 255);
+
+    filter5<uint8_t>(src0, dst0);
+    filter_cv(src0, dst1, 5);
+
+    if(!diff_matrices(dst0, dst1)) {
+        return false;
+    }
+
+    return true;
+}
+
+bool test_filter5_opt(void) {
+    cv::Mat src0(1024, 1024, cv::DataType<uint8_t>::type);
+    cv::Mat dst0 = cv::Mat::zeros(src0.rows, src0.cols, cv::DataType<uint8_t>::type);
+    cv::Mat dst1 = cv::Mat::zeros(src0.rows, src0.cols, cv::DataType<uint8_t>::type);
+    cv::randu(src0, 0, 255);
+
+    filter5_opt<uint8_t>(src0, dst0);
+    filter_cv(src0, dst1, 5);
+
+    if(!diff_matrices(dst0, dst1)) {
+        return false;
+    }
+
+    return true;
+}
+
+bool test_filter7(void) {
+    cv::Mat src0(1024, 1024, cv::DataType<uint8_t>::type);
+    cv::Mat dst0 = cv::Mat::zeros(src0.rows, src0.cols, cv::DataType<uint8_t>::type);
+    cv::Mat dst1 = cv::Mat::zeros(src0.rows, src0.cols, cv::DataType<uint8_t>::type);
+    cv::randu(src0, 0, 255);
+
+    filter7<uint8_t>(src0, dst0);
+    filter_cv(src0, dst1, 7);
+
+    if(!diff_matrices(dst0, dst1)) {
+        return false;
+    }
+
+    return true;
+}
+
+bool test_filter7_opt(void) {
+    cv::Mat src0(1024, 1024, cv::DataType<uint8_t>::type);
+    cv::Mat dst0 = cv::Mat::zeros(src0.rows, src0.cols, cv::DataType<uint8_t>::type);
+    cv::Mat dst1 = cv::Mat::zeros(src0.rows, src0.cols, cv::DataType<uint8_t>::type);
+    cv::randu(src0, 0, 255);
+
+    filter7_opt<uint8_t>(src0, dst0);
+    filter_cv(src0, dst1, 7);
+
+    if(!diff_matrices(dst0, dst1)) {
+        return false;
+    }
+
+    return true;
+}
+
+/**
+* Main function
+*/
 int main(int argc, char* argv[]) {
     print = false;
     //cv::Mat src(10,10, cv::DataType<uint8_t>::type);
     //cv::Mat src(1024,1024, cv::DataType<uint8_t>::type);
-    cv::Mat src(4096,2048, cv::DataType<uint8_t>::type);
+    /*cv::Mat src(4096,2048, cv::DataType<uint8_t>::type);
     cv::Mat dst0 = cv::Mat::zeros(src.rows, src.cols, cv::DataType<uint8_t>::type);
     cv::Mat dst1 = cv::Mat::zeros(src.rows, src.cols, cv::DataType<uint8_t>::type);
     cv::Mat dst2 = cv::Mat::zeros(src.rows, src.cols, cv::DataType<uint8_t>::type);
@@ -437,10 +628,11 @@ int main(int argc, char* argv[]) {
     
     diff_matrices(dst0, dst1, "filter7, filter7_opt");
     diff_matrices(dst0, dst2, "filter7, filter7_cv");
-    diff_matrices(dst1, dst2, "filter7_opt, filter7_cv");
+    diff_matrices(dst1, dst2, "filter7_opt, filter7_cv");*/
 
     run_sort_tests();
     run_merge_tests();
+    run_median_tests();
 
     return 0;
 }
