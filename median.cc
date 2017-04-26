@@ -4,6 +4,8 @@
 #include <chrono>
 #include <string>
 
+#include <getopt.h>
+
 #include <opencv2/core/core.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/highgui/highgui.hpp>
@@ -13,9 +15,19 @@
 #include "merge.h"
 #include "utils.h"
 
-//typedef uint8_t TType;
 bool print = false;
 typedef std::chrono::steady_clock::time_point TTimePoint;
+
+// structure for command line arguments
+struct TArgs {
+    std::string input;
+    std::string output;
+    int win;
+    bool help;
+    bool benchmark;
+    bool test;
+    TArgs () : input(""), output(""), win(0), help(false), benchmark(false), test(false) {}; 
+};
 
 /**
 * Median filter 3x3, basic implementation
@@ -608,7 +620,7 @@ void run_benchmark(void) {
     cv::Mat src1(1024, 1024, cv::DataType<uint8_t>::type);
     cv::Mat dst1 = cv::Mat::zeros(src1.rows, src1.cols, cv::DataType<uint8_t>::type);
     cv::randu(src1, 10, 64);
-    std::cout << "Benchmark for matrix size 1024x1024:" << std::endl;
+    std::cout << "\nBenchmark for matrix size 1024x1024:" << std::endl;
 
     filter3<uint8_t>(src1, dst1);
     filter3_opt<uint8_t>(src1, dst1);
@@ -620,7 +632,7 @@ void run_benchmark(void) {
     cv::Mat src2(2048, 4096, cv::DataType<uint8_t>::type);
     cv::Mat dst2 = cv::Mat::zeros(src2.rows, src2.cols, cv::DataType<uint8_t>::type);
     cv::randu(src2, 10, 64);
-    std::cout << "Benchmark for matrix size 2048x4096:" << std::endl;
+    std::cout << "\nBenchmark for matrix size 2048x4096:" << std::endl;
 
     filter3<uint8_t>(src2, dst2);
     filter3_opt<uint8_t>(src2, dst2);
@@ -634,42 +646,105 @@ void run_benchmark(void) {
 }
 
 /**
+* Parse command line arguments
+*/
+bool parse_cmd(int argc, char *argv[], TArgs& args) {
+    extern int opterr;
+    opterr = 0;
+
+    if(argc < 2) {
+        return false;
+    }
+
+    char command;
+    while((command = getopt(argc, argv, "i:o:w:hbt")) != -1) {
+        switch(command) {
+            case 'i':
+                args.input = optarg;
+                break;
+            case 'o':
+                args.output = optarg;
+                break;
+            case 'w':
+                args.win = std::atoi(optarg);
+                break;
+            case 'h':
+                args.help = true;
+                break;
+            case 'b':
+                args.benchmark = true;
+                break;
+            case 't':
+                args.test = true;
+                break;    
+            case ':':
+            case '?':
+                args.help = true;
+                break;
+        }
+    }   
+
+    if(args.help || (args.input.empty() && !args.benchmark && !args.test)) {
+        return false;
+    }
+    if(args.output.empty()) {
+        args.output = "output_filtered.bmp";
+    }
+    if(args.win == 0) {
+        args.win = 3;
+    }
+
+    return true;
+}
+
+/**
+* Print help
+*/
+void print_help(void) {
+    using namespace std;
+    cout << "Usage: ./median [-i file] [-o file] [-w N] [-b] [-t] [-h]" << endl;
+    cout << "  -i   input file name" << endl;
+    cout << "  -o   output file name" << endl;
+    cout << "  -w   window size, default 3 (3x3)" << endl;
+    cout << "  -b   run benchmark" << endl;
+    cout << "  -t   run tests" << endl;
+    cout << "  -h   print help" << endl;
+
+    return;
+}
+
+/**
 * Main function
 */
 int main(int argc, char* argv[]) {
-    run_sort_tests();
-    run_merge_tests();
-    run_median_tests();
+    TArgs args;
+    cv::Mat src;
 
-    if(argc == 1)
-    {
-        std::cout <<  "Usage: ./median window_size [path/to/image]" << std::endl;
+    if(!parse_cmd(argc, argv, args)) {
+        print_help();
         return -1;
     }
 
-    cv::Mat src;
-    if(argc > 2)
-    {
-        src = cv::imread(argv[2], CV_LOAD_IMAGE_ANYDEPTH);
-        if(! src.data )
-        {
-            std::cout <<  "Could not open or find the image" << std::endl ;
-            return -1;
-        }
+    if(args.benchmark) {
+        run_benchmark();
+        return 0;
     }
-    else 
-    {
-        src = cv::Mat(4096,2048, cv::DataType<uint8_t>::type);
-        cv::randu(src, 10, 64);
+    if(args.test) {
+        run_sort_tests();
+        run_merge_tests();
+        run_median_tests();
+        return 0;
     }
 
-    cv::Mat dst0 = cv::Mat::zeros(src.rows, src.cols, cv::DataType<uint8_t>::type);
-    int window = atoi(argv[1]);
+    src = cv::imread(argv[2], CV_LOAD_IMAGE_ANYDEPTH);
+    if(!src.data) {
+        std::cerr <<  "Could not open or find the image" << std::endl;
+        return -1;
+    }
+    cv::Mat dst = cv::Mat::zeros(src.rows, src.cols, cv::DataType<uint8_t>::type);
     
-    median_filter<uint8_t>(src, dst0, window);
-    imwrite( "filtered0.bmp", dst0 );
-
-    run_benchmark();
+    median_filter<uint8_t>(src, dst, args.win);
+    imwrite(args.output, dst);
 
     return 0;
 }
