@@ -641,7 +641,33 @@ int main(int argc, char* argv[]) {
     run_merge_tests();
     run_median_tests();
 
-    //median_filter<uint8_t>(src, dst0, 3);
+    if(argc == 1)
+    {
+        std::cout <<  "Usage: ./median window_size [path/to/image]" << std::endl;
+        return -1;
+    }
+
+    cv::Mat src;
+    if(argc > 2)
+    {
+        src = cv::imread(argv[2], CV_LOAD_IMAGE_ANYDEPTH);
+        if(! src.data )
+        {
+            std::cout <<  "Could not open or find the image" << std::endl ;
+            return -1;
+        }
+    }
+    else 
+    {
+        src = cv::Mat(4096,2048, cv::DataType<uint8_t>::type);
+        cv::randu(src, 10, 64);
+    }
+
+    cv::Mat dst0 = cv::Mat::zeros(src.rows, src.cols, cv::DataType<uint8_t>::type);
+    int window = atoi(argv[1]);
+    
+    median_filter<uint8_t>(src, dst0, window);
+    imwrite( "filtered0.bmp", dst0 );
 
     run_benchmark();
 

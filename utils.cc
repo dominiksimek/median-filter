@@ -17,15 +17,15 @@ bool diff_matrices(const cv::Mat& mat0, const cv::Mat& mat1, const std::string d
     bool rv = true;
     double mav = 255.0;
     double err = 255.0;
-    double nonzeros = 255.0;
+    //double nonzeros = 255.0;
     cv::Mat diff;
 
     cv::absdiff(mat0, mat1, diff);
     cv::minMaxLoc(diff, NULL, &mav);
     err = (cv::sum(diff).val[0] / (diff.rows*diff.cols));
-    nonzeros = 1. * cv::countNonZero( diff ) / (diff.rows*diff.cols);
+    //nonzeros = 1. * cv::countNonZero( diff ) / (diff.rows*diff.cols);
 
-    if(err != 0.0 || nonzeros != 0.0 || mav != 0.0) {
+    if(err != 0.0 || mav != 0.0) {
         rv = false;
     }
 
@@ -40,7 +40,7 @@ bool diff_matrices(const cv::Mat& mat0, const cv::Mat& mat1, const std::string d
     if(print_stats) {
         std::cout << "compare " << description << ":" << std::endl;
         std::cout << "error: " << err << std::endl;
-        std::cout << "nonzeros: " << nonzeros << std::endl;
+        //std::cout << "nonzeros: " << nonzeros << std::endl;
         std::cout << "mav: " << mav << std::endl;
     }
 
