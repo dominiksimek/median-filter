@@ -637,15 +637,14 @@ void run_benchmark(void) {
 * Main function
 */
 int main(int argc, char* argv[]) {
-    run_sort_tests();
-    run_merge_tests();
-    run_median_tests();
-
     if(argc == 1)
     {
         std::cout <<  "Usage: ./median window_size [path/to/image]" << std::endl;
-        return -1;
     }
+
+    run_sort_tests();
+    run_merge_tests();
+    run_median_tests();
 
     cv::Mat src;
     if(argc > 2)
@@ -656,19 +655,13 @@ int main(int argc, char* argv[]) {
             std::cout <<  "Could not open or find the image" << std::endl ;
             return -1;
         }
+        cv::Mat dst0 = cv::Mat::zeros(src.rows, src.cols, cv::DataType<uint8_t>::type);
+        int window = atoi(argv[1]);
+        
+        median_filter<uint8_t>(src, dst0, window);
+        imwrite( "filtered0.bmp", dst0 );
     }
-    else 
-    {
-        src = cv::Mat(4096,2048, cv::DataType<uint8_t>::type);
-        cv::randu(src, 10, 64);
-    }
-
-    cv::Mat dst0 = cv::Mat::zeros(src.rows, src.cols, cv::DataType<uint8_t>::type);
-    int window = atoi(argv[1]);
     
-    median_filter<uint8_t>(src, dst0, window);
-    imwrite( "filtered0.bmp", dst0 );
-
     run_benchmark();
 
     return 0;
