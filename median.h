@@ -14,6 +14,7 @@ void filter7_opt(cv::Mat& src, cv::Mat& dst);
 
 void filter_cv(cv::Mat& src, cv::Mat& dst, int filterSize);
 
+void median_filter(cv::Mat& src, cv::Mat& dst, int filterSize);
 
 // tests
 void run_median_tests(void);

@@ -27,24 +27,26 @@ void filter3(cv::Mat& src, cv::Mat& dst) {
     cv::Mat srcBorder;
     copyMakeBorder(src, srcBorder, center, center, center, center, cv::BORDER_REPLICATE);
     dst = cv::Mat(src.size(), src.type());
-    T win[9];
+    //T win[9];
+    std::vector<T> winvec(9);
     TTimePoint begin = std::chrono::steady_clock::now();
+    int widx = 0;
 
     // median filter
     for(int y = 0; y < src.rows; y++) {
         for(int x = 0; x < src.cols; x++) {
-            win[0] = srcBorder.at<T>(y,   x);
-            win[1] = srcBorder.at<T>(y+1, x);
-            win[2] = srcBorder.at<T>(y+2, x);
-            win[3] = srcBorder.at<T>(y,   x+1);
-            win[4] = srcBorder.at<T>(y+1, x+1);
-            win[5] = srcBorder.at<T>(y+2, x+1);
-            win[6] = srcBorder.at<T>(y,   x+2);
-            win[7] = srcBorder.at<T>(y+1, x+2);
-            win[8] = srcBorder.at<T>(y+2, x+2);
+            for(int j = 0; j < 3; j++) {
+                for(int i = 0; i < 3; i++) {
+                    //win[widx] = srcBorder.at<T>(y+j, x+i);
+                    winvec[widx] = srcBorder.at<T>(y+j, x+i);
+                    widx++;
+                }
+            }
+            widx = 0;
 
-            insertion_sort<T>(win, 9);
-            dst.at<uchar>(y,x) = win[4];
+            //insertion_sort<T>(win, 9);
+            std::sort(winvec.begin(), winvec.end());
+            dst.at<uchar>(y,x) = winvec[4];
         }
     }
 
@@ -81,10 +83,6 @@ void filter3_opt(cv::Mat& src, cv::Mat& dst) {
             if(x == (prev_x+1)) {
                 std::memcpy(col0, col1, 3*sizeof(T));
                 std::memcpy(col1, col2, 3*sizeof(T));
-                /*col2[0] = srcBorder.at<T>(y,   x+2);
-                col2[1] = srcBorder.at<T>(y+1, x+2);
-                col2[2] = srcBorder.at<T>(y+2, x+2);
-                */
                 for(int j = 0; j < 3; j++) {
                     col2[j] = srcBorder.at<T>(y+j, x+2);
                 }
@@ -93,18 +91,6 @@ void filter3_opt(cv::Mat& src, cv::Mat& dst) {
                 sort3(col2);
             }
             else {
-                /*col0[0] = srcBorder.at<T>(y,   x);
-                col0[1] = srcBorder.at<T>(y+1, x);
-                col0[2] = srcBorder.at<T>(y+2, x);
-
-                col1[0] = srcBorder.at<T>(y,   x+1);
-                col1[1] = srcBorder.at<T>(y+1, x+1);
-                col1[2] = srcBorder.at<T>(y+2, x+1);
-
-                col2[0] = srcBorder.at<T>(y,   x+2);
-                col2[1] = srcBorder.at<T>(y+1, x+2);
-                col2[2] = srcBorder.at<T>(y+2, x+2);
-                */
                 for(int j = 0; j < 3; j++) {
                     col0[j] = srcBorder.at<T>(y+j, x);
                     col1[j] = srcBorder.at<T>(y+j, x+1);
@@ -114,10 +100,6 @@ void filter3_opt(cv::Mat& src, cv::Mat& dst) {
                 sort3(col0);
                 sort3(col1);
                 sort3(col2);
-                
-                //insertion_sort<T>(col0, 3);
-                //insertion_sort<T>(col1, 3);
-                //insertion_sort<T>(col2, 3);
             }
 
             merge3_arrays(col0, col1, col2, win, 3);
@@ -185,9 +167,9 @@ void filter5(cv::Mat& src, cv::Mat& dst) {
     cv::Mat srcBorder;
     copyMakeBorder(src, srcBorder, center, center, center, center, cv::BORDER_REPLICATE);
     dst = cv::Mat(src.size(), src.type());
-    T win[25];
+    //T win[25];
     TTimePoint begin = std::chrono::steady_clock::now();
-    //std::vector<T> winvec(25);
+    std::vector<T> winvec(25);
     int widx = 0;
 
     // median filter
@@ -195,14 +177,15 @@ void filter5(cv::Mat& src, cv::Mat& dst) {
         for(int x = 0; x < src.cols; x++) {
             for(int j = 0; j < 5; j++) {
                 for(int i = 0; i < 5; i++) {
-                    win[widx] = srcBorder.at<T>(y+j, x+i);
+                    //win[widx] = srcBorder.at<T>(y+j, x+i);
+                    winvec[widx] = srcBorder.at<T>(y+j, x+i);
                     widx++;
                 }
             }
             widx = 0;
-            insertion_sort<T>(win, 25);
-            //std::sort(winvec.begin(), winvec.end());
-            dst.at<uchar>(y,x) = win[12];
+            //insertion_sort<T>(win, 25);
+            std::sort(winvec.begin(), winvec.end());
+            dst.at<uchar>(y,x) = winvec[12];
         }
     }
 
@@ -292,7 +275,8 @@ void filter7(cv::Mat& src, cv::Mat& dst) {
     cv::Mat srcBorder;
     copyMakeBorder(src, srcBorder, center, center, center, center, cv::BORDER_REPLICATE);
     dst = cv::Mat(src.size(), src.type());
-    T win[49];
+    //T win[49];
+    std::vector<T> winvec(49);
     TTimePoint begin = std::chrono::steady_clock::now();
     int widx = 0;
 
@@ -301,13 +285,14 @@ void filter7(cv::Mat& src, cv::Mat& dst) {
         for(int x = 0; x < src.cols; x++) {
             for(int j = 0; j < 7; j++) {
                 for(int i = 0; i < 7; i++) {
-                    win[widx] = srcBorder.at<T>(y+j, x+i);
+                    winvec[widx] = srcBorder.at<T>(y+j, x+i);
                     widx++;
                 }
             }
             widx = 0;
-            insertion_sort<T>(win, 49);
-            dst.at<uchar>(y,x) = win[24];
+            //insertion_sort<T>(win, 49);
+            std::sort(winvec.begin(), winvec.end());
+            dst.at<uchar>(y,x) = winvec[24];
         }
     }
 
@@ -398,6 +383,7 @@ void filter7_opt(cv::Mat& src, cv::Mat& dst) {
 */
 void filter_cv(cv::Mat& src, cv::Mat& dst, int filterSize) {
     TTimePoint begin = std::chrono::steady_clock::now();
+    dst = cv::Mat(src.size(), src.type());
 
     cv::medianBlur(src, dst, filterSize);
 
@@ -406,6 +392,31 @@ void filter_cv(cv::Mat& src, cv::Mat& dst, int filterSize) {
         std::cout << "filter_cv::TimeElapsed (us): " << \
         std::chrono::duration_cast<std::chrono::microseconds>(end-begin).count()/1000 << \
         std::endl;
+    }
+
+    return;
+}
+
+/**
+* Wrapper to median functions
+* 
+* @param src sorce matrix
+* @param dst destination matrix
+* @param filterSize size of filter, supported sizes are 3 (3x3), 5 (5x5), 7 (7x7)
+*/
+template <class T>
+void median_filter(cv::Mat& src, cv::Mat& dst, int filterSize) {
+    if(filterSize == 3) {
+        filter3_opt<T>(src, dst);
+    }
+    else if(filterSize == 5) {
+        filter5_opt<T>(src, dst);
+    }
+    else if(filterSize == 7) {
+        filter7_opt<T>(src, dst);
+    }
+    else {
+        std::cerr << "Unsupported filter size" << std::endl;
     }
 
     return;
@@ -580,59 +591,59 @@ bool test_filter7_opt(void) {
     return true;
 }
 
+void run_benchmark(void) {
+    print = true;
+    cv::Mat src0(512, 512, cv::DataType<uint8_t>::type);
+    cv::Mat dst0 = cv::Mat::zeros(src0.rows, src0.cols, cv::DataType<uint8_t>::type);
+    cv::randu(src0, 10, 64);
+    std::cout << "Benchmark for matrix size 512x512:" << std::endl;
+
+    filter3<uint8_t>(src0, dst0);
+    filter3_opt<uint8_t>(src0, dst0);
+    filter5<uint8_t>(src0, dst0);
+    filter5_opt<uint8_t>(src0, dst0);
+    filter7<uint8_t>(src0, dst0);
+    filter7_opt<uint8_t>(src0, dst0);
+
+    cv::Mat src1(1024, 1024, cv::DataType<uint8_t>::type);
+    cv::Mat dst1 = cv::Mat::zeros(src1.rows, src1.cols, cv::DataType<uint8_t>::type);
+    cv::randu(src1, 10, 64);
+    std::cout << "Benchmark for matrix size 1024x1024:" << std::endl;
+
+    filter3<uint8_t>(src1, dst1);
+    filter3_opt<uint8_t>(src1, dst1);
+    filter5<uint8_t>(src1, dst1);
+    filter5_opt<uint8_t>(src1, dst1);
+    filter7<uint8_t>(src1, dst1);
+    filter7_opt<uint8_t>(src1, dst1);
+
+    cv::Mat src2(2048, 4096, cv::DataType<uint8_t>::type);
+    cv::Mat dst2 = cv::Mat::zeros(src2.rows, src2.cols, cv::DataType<uint8_t>::type);
+    cv::randu(src2, 10, 64);
+    std::cout << "Benchmark for matrix size 2048x4096:" << std::endl;
+
+    filter3<uint8_t>(src2, dst2);
+    filter3_opt<uint8_t>(src2, dst2);
+    filter5<uint8_t>(src2, dst2);
+    filter5_opt<uint8_t>(src2, dst2);
+    filter7<uint8_t>(src2, dst2);
+    filter7_opt<uint8_t>(src2, dst2);
+    print = false;
+
+    return;
+}
+
 /**
 * Main function
 */
 int main(int argc, char* argv[]) {
-    print = false;
-    //cv::Mat src(10,10, cv::DataType<uint8_t>::type);
-    //cv::Mat src(1024,1024, cv::DataType<uint8_t>::type);
-    /*cv::Mat src(4096,2048, cv::DataType<uint8_t>::type);
-    cv::Mat dst0 = cv::Mat::zeros(src.rows, src.cols, cv::DataType<uint8_t>::type);
-    cv::Mat dst1 = cv::Mat::zeros(src.rows, src.cols, cv::DataType<uint8_t>::type);
-    cv::Mat dst2 = cv::Mat::zeros(src.rows, src.cols, cv::DataType<uint8_t>::type);
-    cv::Mat dst3 = cv::Mat::zeros(src.rows, src.cols, cv::DataType<uint8_t>::type);
-    cv::randu(src, 10, 64);
-
-    //print_matrix<uint8_t>(src);
-    //print_matrix<uint8_t>(dst);
-    for(unsigned i = 0; i < 2; i++)
-        filter3<uint8_t>(src, dst0);
-    for(unsigned i = 0; i < 2; i++)
-        filter3_opt<uint8_t>(src, dst1);
-    for(unsigned i = 0; i < 2; i++)
-        filter3_opt_sort_only<uint8_t>(src, dst2);
-    for(unsigned i = 0; i < 2; i++)
-        filter_cv(src, dst3, 3);
-
-    diff_matrices(dst0, dst1, "filter3, filter3_opt");
-    diff_matrices(dst0, dst2, "filter3, filter3_opt_sort_only");
-    diff_matrices(dst0, dst3, "filter3, filter3_cv");
-    
-    for(unsigned i = 0; i < 1; i++)
-        filter5<uint8_t>(src, dst0);
-    for(unsigned i = 0; i < 1; i++)
-        filter5_opt<uint8_t>(src, dst1);
-    for(unsigned i = 0; i < 1; i++)
-        filter_cv(src, dst2, 5);
-    
-    diff_matrices(dst0, dst1, "filter5, filter5_opt");
-    diff_matrices(dst0, dst2, "filter5, filter5_cv");
-    
-    for(unsigned i = 0; i < 2; i++)
-        filter7<uint8_t>(src, dst0);
-    for(unsigned i = 0; i < 5; i++)
-        filter7_opt<uint8_t>(src, dst1);
-    for(unsigned i = 0; i < 1; i++)
-        filter_cv(src, dst2, 7);
-    
-    diff_matrices(dst0, dst1, "filter7, filter7_opt");
-    diff_matrices(dst0, dst2, "filter7, filter7_cv");
-    diff_matrices(dst1, dst2, "filter7_opt, filter7_cv");*/
-
     run_sort_tests();
     run_merge_tests();
     run_median_tests();
+
+    //median_filter<uint8_t>(src, dst0, 3);
+
+    run_benchmark();
 
     return 0;
 }

@@ -1,7 +1,7 @@
 # Makefile
 
 CXX=g++
-CXXFLAGS=-std=c++11 -O3 -g -Wall -I. -I/usr/local/include
+CXXFLAGS=-std=c++11 -O2 -g -Wall -I. -I/usr/local/include
 LDFLAGS=-lopencv_core -lopencv_imgproc -lopencv_highgui -lopencv_imgcodecs
 BIN=median
 OBJS=median.o sort.o utils.o merge.o
