@@ -1,3 +1,12 @@
+/**
+* Implementations of median filters
+*
+* @author Dominik Simek
+* @author Filip Listiak
+*
+* FIT VUT, ZPO 2016/2017
+*/
+
 #include <iostream>
 #include <cstdint>
 #include <ctime>
@@ -661,7 +670,7 @@ int main(int argc, char* argv[]) {
         return 0;
     }
 
-    src = cv::imread(argv[2], CV_LOAD_IMAGE_ANYDEPTH);
+    src = cv::imread(args.input, CV_LOAD_IMAGE_ANYDEPTH);
     if(!src.data) {
         std::cerr <<  "Could not open or find the image" << std::endl;
         return -1;
