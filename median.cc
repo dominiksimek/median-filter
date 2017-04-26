@@ -15,7 +15,10 @@
 
 bool print = false;
 
+/*****************************************************************************/
 /**
+* Filters implementation
+*
 * Median filter 3x3, basic implementation
 */
 template <class T>
@@ -589,6 +592,10 @@ bool test_filter7_opt(void) {
     return true;
 }
 
+/*****************************************************************************/
+/**
+* Benchmark
+*/
 void run_benchmark(void) {
     print = true;
     cv::Mat src0(512, 512, cv::DataType<uint8_t>::type);

@@ -1,4 +1,9 @@
 # Makefile
+# 
+# @author Dominik Simek
+# @author Filip Listiak
+#
+# FIT VUT, ZPO 2016/2017
 
 CXX=g++
 CXXFLAGS=-std=c++11 -O2 -g -Wall -I. -I/usr/local/include

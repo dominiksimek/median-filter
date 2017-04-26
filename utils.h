@@ -1,3 +1,12 @@
+/**
+* Interface for utils functions
+*
+* @author Dominik Simek
+* @author Filip Listiak
+*
+* FIT VUT, ZPO 2016/2017
+*/
+
 #ifndef __UTILS_H__
 #define __UTILS_H__
 

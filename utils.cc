@@ -1,3 +1,12 @@
+/**
+* Simple utils implementation
+*
+* @author Dominik Simek
+* @author Filip Listiak
+*
+* FIT VUT, ZPO 2016/2017
+*/
+
 #include "utils.h"
 
 template <class T>

@@ -1,5 +1,10 @@
 /**
-* Sorting algorithm
+* Implementation of sorting algorithms
+*
+* @author Dominik Simek
+* @author Filip Listiak
+*
+* FIT VUT, ZPO 2016/2017
 */
 
 #ifndef __SORT_H__

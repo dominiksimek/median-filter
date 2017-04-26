@@ -1,3 +1,12 @@
+/**
+* Interface of median filter funtions
+*
+* @author Dominik Simek
+* @author Filip Listiak
+*
+* FIT VUT, ZPO 2016/2017
+*/
+
 #ifndef __MEDIAN_H__
 #define __MEDIAN_H__
 

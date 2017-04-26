@@ -1,7 +1,11 @@
 /**
-* Merging algorithm
+* Implementation of merging algorithms
+*
+* @author Dominik Simek
+* @author Filip Listiak
+*
+* FIT VUT, ZPO 2016/2017
 */
-
 #ifndef __MERGE_H__
 #define __MERGE_H__
 

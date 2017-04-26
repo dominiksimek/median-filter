@@ -1,5 +1,10 @@
 /**
-* Tests
+* Tests for merge functions
+*
+* @author Dominik Simek
+* @author Filip Listiak
+*
+* FIT VUT, ZPO 2016/2017
 */
 
 #include <cstdint>
