@@ -46,3 +46,71 @@ bool diff_matrices(const cv::Mat& mat0, const cv::Mat& mat1, const std::string d
 
     return rv;
 }
+
+/**
+* Parse command line arguments
+*/
+bool parse_cmd(int argc, char *argv[], TArgs& args) {
+    extern int opterr;
+    opterr = 0;
+
+    if(argc < 2) {
+        return false;
+    }
+
+    char command;
+    while((command = getopt(argc, argv, "i:o:w:hbt")) != -1) {
+        switch(command) {
+            case 'i':
+                args.input = optarg;
+                break;
+            case 'o':
+                args.output = optarg;
+                break;
+            case 'w':
+                args.win = std::atoi(optarg);
+                break;
+            case 'h':
+                args.help = true;
+                break;
+            case 'b':
+                args.benchmark = true;
+                break;
+            case 't':
+                args.test = true;
+                break;    
+            case ':':
+            case '?':
+                args.help = true;
+                break;
+        }
+    }   
+
+    if(args.help || (args.input.empty() && !args.benchmark && !args.test)) {
+        return false;
+    }
+    if(args.output.empty()) {
+        args.output = "output_filtered.bmp";
+    }
+    if(args.win == 0) {
+        args.win = 3;
+    }
+
+    return true;
+}
+
+/**
+* Print help
+*/
+void print_help(void) {
+    using namespace std;
+    cout << "Usage: ./median [-i file] [-o file] [-w N] [-b] [-t] [-h]" << endl;
+    cout << "  -i   input file name" << endl;
+    cout << "  -o   output file name" << endl;
+    cout << "  -w   window size, default 3 (3x3)" << endl;
+    cout << "  -b   run benchmark" << endl;
+    cout << "  -t   run tests" << endl;
+    cout << "  -h   print help" << endl;
+
+    return;
+}

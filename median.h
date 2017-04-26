@@ -29,4 +29,7 @@ bool test_filter5_opt(void);
 bool test_filter7(void);
 bool test_filter7_opt(void);
 
+// benchmark
+void run_benchmark(void);
+
 #endif
