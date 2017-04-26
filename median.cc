@@ -378,6 +378,96 @@ void filter7_opt(cv::Mat& src, cv::Mat& dst) {
     return;
 }
 
+template <class T>
+void filter7_opt__(T* s, T* d, int rows, int cols) {
+    // resize src image and copy borders
+    T win[49];
+    T col0[7];
+    T col1[7];
+    T col2[7];
+    T col3[7];
+    T col4[7];
+    T col5[7];
+    T col6[7];
+    int prev_x = 1;
+    TTimePoint begin = std::chrono::steady_clock::now();
+
+    // median filter
+    for(int y = 0; y < rows; y++) {
+        for(int x = 0; x < cols; x++) {
+            if(x == (prev_x+1)) {
+                std::memcpy(col0, col1, 7*sizeof(T));
+                std::memcpy(col1, col2, 7*sizeof(T));
+                std::memcpy(col2, col3, 7*sizeof(T));
+                std::memcpy(col3, col4, 7*sizeof(T));
+                std::memcpy(col4, col5, 7*sizeof(T));
+                std::memcpy(col5, col6, 7*sizeof(T));
+
+                for(int j = 0; j < 7; j++) {
+                    //col6[j] = srcBorder.at<T>(y+j, x+6);
+                    col6[j] = s[(y+j)*cols + x+6];
+                }
+                //insertion_sort<T>(col6, 7);
+                sort7<T>(col6);
+            }
+            else {
+                for(int j = 0; j < 7; j++) {
+                    col0[j] = s[(y+j)*cols + x];
+                    col1[j] = s[(y+j)*cols + x+1];
+                    col2[j] = s[(y+j)*cols + x+2];
+                    col3[j] = s[(y+j)*cols + x+3];
+                    col4[j] = s[(y+j)*cols + x+4];
+                    col5[j] = s[(y+j)*cols + x+5];
+                    col6[j] = s[(y+j)*cols + x+6];
+
+                }
+                sort7<T>(col0);
+                sort7<T>(col1);
+                sort7<T>(col2);
+                sort7<T>(col3);
+                sort7<T>(col4);
+                sort7<T>(col5);
+                sort7<T>(col6);
+            }
+
+            merge7_arrays<T>(col0, col1, col2, col3, col4, col5, col6, win);
+            //dst.at<uchar>(y,x) = win[24];
+        }
+    }
+
+    if(print) {
+        TTimePoint end = std::chrono::steady_clock::now();
+        std::cout << "filter7_opt__::TimeElapsed (us): " << \
+        std::chrono::duration_cast<std::chrono::microseconds>(end-begin).count()/1000 << \
+        std::endl;
+    }
+
+    return;
+}
+
+/**
+* Median filter 7x7, optimized implementation
+*/
+template <class T>
+void filter7_opt__w(cv::Mat& src, cv::Mat& dst) {
+    // resize src image and copy borders
+    int center = 3;
+    cv::Mat srcBorder;
+    copyMakeBorder(src, srcBorder, center, center, center, center, cv::BORDER_REPLICATE);
+
+    int size = src.total() * src.elemSize();
+    T* s = new T[size];
+    T* d = new T[size];
+    std::memcpy(s, src.data, size * sizeof(T));
+    dst = cv::Mat(src.size(), src.type());
+
+    filter7_opt__<T>(s, d, src.rows, src.cols);
+
+    delete [] s;
+    delete [] d;
+    return;
+}
+
 /**
 * Use OpenCV implementation of median filter to check results
 */
@@ -637,13 +727,21 @@ void run_benchmark(void) {
 * Main function
 */
 int main(int argc, char* argv[]) {
-    run_sort_tests();
-    run_merge_tests();
-    run_median_tests();
+    //run_sort_tests();
+    //run_merge_tests();
+    //run_median_tests();
 
-    //median_filter<uint8_t>(src, dst0, 3);
+    cv::Mat src0(2048, 2048, cv::DataType<uint8_t>::type);
+    cv::Mat dst0 = cv::Mat::zeros(src0.rows, src0.cols, cv::DataType<uint8_t>::type);
+    cv::randu(src0, 10, 64);
+    print = true;
+    filter7<uint8_t>(src0, dst0);
+    filter7_opt__w<uint8_t>(src0, dst0);
 
-    run_benchmark();
+    filter7_opt<uint8_t>(src0, dst0);
+    //median_filter<uint8_t>(src0, dst0, 4);
+
+    //run_benchmark();
 
     return 0;
 }
