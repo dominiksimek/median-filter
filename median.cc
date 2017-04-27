@@ -610,7 +610,7 @@ void run_benchmark(void) {
     cv::Mat src0(512, 512, cv::DataType<uint8_t>::type);
     cv::Mat dst0 = cv::Mat::zeros(src0.rows, src0.cols, cv::DataType<uint8_t>::type);
     cv::randu(src0, 10, 64);
-    std::cout << "Benchmark for matrix size 512x512:" << std::endl;
+    std::cout << "\nBenchmark for matrix size 512x512:" << std::endl;
 
     filter3<uint8_t>(src0, dst0);
     filter3_opt<uint8_t>(src0, dst0);
@@ -631,10 +631,10 @@ void run_benchmark(void) {
     filter7<uint8_t>(src1, dst1);
     filter7_opt<uint8_t>(src1, dst1);
 
-    cv::Mat src2(2048, 4096, cv::DataType<uint8_t>::type);
+    cv::Mat src2(2048, 2048, cv::DataType<uint8_t>::type);
     cv::Mat dst2 = cv::Mat::zeros(src2.rows, src2.cols, cv::DataType<uint8_t>::type);
     cv::randu(src2, 10, 64);
-    std::cout << "\nBenchmark for matrix size 2048x4096:" << std::endl;
+    std::cout << "\nBenchmark for matrix size 2048x2048:" << std::endl;
 
     filter3<uint8_t>(src2, dst2);
     filter3_opt<uint8_t>(src2, dst2);
@@ -642,11 +642,35 @@ void run_benchmark(void) {
     filter5_opt<uint8_t>(src2, dst2);
     filter7<uint8_t>(src2, dst2);
     filter7_opt<uint8_t>(src2, dst2);
+
+    cv::Mat src3(2048, 4096, cv::DataType<uint8_t>::type);
+    cv::Mat dst3 = cv::Mat::zeros(src3.rows, src3.cols, cv::DataType<uint8_t>::type);
+    cv::randu(src3, 10, 64);
+    std::cout << "\nBenchmark for matrix size 2048x4096:" << std::endl;
+
+    filter3<uint8_t>(src3, dst3);
+    filter3_opt<uint8_t>(src3, dst3);
+    filter5<uint8_t>(src3, dst3);
+    filter5_opt<uint8_t>(src3, dst3);
+    filter7<uint8_t>(src3, dst3);
+    filter7_opt<uint8_t>(src3, dst3);
+
+    cv::Mat src4(4096, 4096, cv::DataType<uint8_t>::type);
+    cv::Mat dst4 = cv::Mat::zeros(src4.rows, src4.cols, cv::DataType<uint8_t>::type);
+    cv::randu(src4, 10, 64);
+    std::cout << "\nBenchmark for matrix size 4096x4096:" << std::endl;
+
+    filter3<uint8_t>(src4, dst4);
+    filter3_opt<uint8_t>(src4, dst4);
+    filter5<uint8_t>(src4, dst4);
+    filter5_opt<uint8_t>(src4, dst4);
+    filter7<uint8_t>(src4, dst4);
+    filter7_opt<uint8_t>(src4, dst4);
     print = false;
 
     return;
 }
-
+    
 /**
 * Main function
 */
@@ -676,8 +700,14 @@ int main(int argc, char* argv[]) {
         return -1;
     }
     cv::Mat dst = cv::Mat::zeros(src.rows, src.cols, cv::DataType<uint8_t>::type);
-    
-    median_filter<uint8_t>(src, dst, args.win);
+    print = true;    
+    if(args.cv) {
+        filter_cv(src, dst, args.win);
+    }
+    else {
+        median_filter<uint8_t>(src, dst, args.win);
+    }
+
     imwrite(args.output, dst);
 
     return 0;

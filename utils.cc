@@ -68,7 +68,7 @@ bool parse_cmd(int argc, char *argv[], TArgs& args) {
     }
 
     char command;
-    while((command = getopt(argc, argv, "i:o:w:hbt")) != -1) {
+    while((command = getopt(argc, argv, "i:o:w:hbtc")) != -1) {
         switch(command) {
             case 'i':
                 args.input = optarg;
@@ -87,7 +87,10 @@ bool parse_cmd(int argc, char *argv[], TArgs& args) {
                 break;
             case 't':
                 args.test = true;
-                break;    
+                break;
+            case 'c':
+                args.cv = true;
+                break;   
             case ':':
             case '?':
                 args.help = true;
@@ -117,6 +120,7 @@ void print_help(void) {
     cout << "  -i   input file name" << endl;
     cout << "  -o   output file name" << endl;
     cout << "  -w   window size, default 3 (3x3)" << endl;
+    cout << "  -c   use OpenCV media filter" << endl;
     cout << "  -b   run benchmark" << endl;
     cout << "  -t   run tests" << endl;
     cout << "  -h   print help" << endl;
