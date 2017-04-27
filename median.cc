@@ -700,7 +700,7 @@ int main(int argc, char* argv[]) {
         return -1;
     }
     cv::Mat dst = cv::Mat::zeros(src.rows, src.cols, cv::DataType<uint8_t>::type);
-    print = true;    
+  
     if(args.cv) {
         filter_cv(src, dst, args.win);
     }

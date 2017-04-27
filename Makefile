@@ -30,7 +30,12 @@ utils.o: utils.cc utils.h
 	$(CXX) $(CXXFLAGS) -c $< -o $@ $(LDFLAGS)
 
 run:
-	@./$(BIN)
+	./$(BIN) -i saltPepper0.png -w 7 -o filtered0.png
+	./$(BIN) -i saltPepper1.png -w 3 -o filtered1.png
+
+pack:
+	zip -r xsimek23.zip *.cc *.h Makefile README.md doc.pdf saltPepper0.png saltPepper1.png
+	cp xsimek23.zip xlisti00.zip 
 
 clean:
 	rm -f $(BIN) *.o
