@@ -31,7 +31,8 @@ struct TArgs {
     bool help;
     bool benchmark;
     bool test;
-    TArgs () : input(""), output(""), win(0), help(false), benchmark(false), test(false) {}; 
+    bool cv;
+    TArgs () : input(""), output(""), win(0), help(false), benchmark(false), test(false), cv(false) {}; 
 };
 
 template <class T>

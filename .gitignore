@@ -8,3 +8,7 @@ median
 #*.odt
 *.png
 *.bmp
+
+*.csv
+*.txt
+*.zip
