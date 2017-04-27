@@ -116,7 +116,7 @@ bool parse_cmd(int argc, char *argv[], TArgs& args) {
 */
 void print_help(void) {
     using namespace std;
-    cout << "Usage: ./median [-i file] [-o file] [-w N] [-b] [-t] [-h]" << endl;
+    cout << "Usage: ./median [-i file] [-o file] [-w N] [-c] [-b] [-t] [-h]" << endl;
     cout << "  -i   input file name" << endl;
     cout << "  -o   output file name" << endl;
     cout << "  -w   window size, default 3 (3x3)" << endl;
